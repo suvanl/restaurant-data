@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Footer } from "@/components/footer";
 import "@/styles/globals.css";
+import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
     title: "Restaurant Data",
@@ -32,6 +33,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
+                    <Header className="container mx-auto p-4 md:p-16" />
                     {children}
                     <Footer className="container mx-auto px-4 md:px-16" />
                 </ThemeProvider>
