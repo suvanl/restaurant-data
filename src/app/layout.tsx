@@ -34,7 +34,9 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     <Header className="container mx-auto p-4 md:p-16" />
-                    {children}
+                    <main className="container mx-auto grow items-center p-4 py-60 md:px-16 md:py-[16dvh]">
+                        {children}
+                    </main>
                     <Footer className="container mx-auto px-4 md:px-16" />
                 </ThemeProvider>
             </body>
