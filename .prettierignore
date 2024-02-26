@@ -1,0 +1,14 @@
+.vscode/
+node_modules/
+
+# Build artifacts
+.next/
+dist/
+public/
+
+# Configs
+package.json
+package-lock.json
+pnpm-lock.yaml
+tsconfig.json
+components.json
