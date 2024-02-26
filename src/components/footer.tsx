@@ -7,7 +7,7 @@ export const Footer = (props: HTMLAttributes<HTMLElement>) => {
 
     return (
         <footer
-            className={cn("text-muted-foreground mb-5 text-sm", className)}
+            className={cn("text-muted-foreground mb-6 text-sm", className)}
             {...attrs}
         >
             <Separator className="mb-4" />
