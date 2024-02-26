@@ -5,8 +5,8 @@ import { SearchIcon } from "lucide-react";
 
 export default function HomePage() {
     return (
-        <main className="container relative mx-auto min-h-dvh items-center space-y-60 overflow-auto p-4 md:p-16">
-            <section className="flex items-center justify-between gap-x-2">
+        <main className="container mx-auto grow items-center space-y-60 overflow-auto p-4 md:p-16">
+            <section className="flex items-center justify-between gap-x-2 sm:items-start">
                 <div>
                     <h1 className="font-semibold tracking-tight sm:text-lg">
                         Restaurant Data Search
