@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Footer } from "@/components/footer";
 import "@/styles/globals.css";
+import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
     title: "Restaurant Data",
@@ -18,8 +21,25 @@ export default function RootLayout({
         <html
             lang="en"
             className={`${GeistSans.variable} ${GeistMono.variable}`}
+            // Suppress warning about className prop mismatch between server and client.
+            // ThemeProvider will modify the className by appending the theme name to it.
+            //This is expected behaviour. This suppression only applies one level deep.
+            suppressHydrationWarning
         >
-            <body>{children}</body>
+            <body className="flex h-dvh flex-col">
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <Header className="container mx-auto p-4 md:p-16" />
+                    <main className="container mx-auto grow items-center p-4 py-60 md:px-16 md:py-[16dvh]">
+                        {children}
+                    </main>
+                    <Footer className="container mx-auto px-4 md:px-16" />
+                </ThemeProvider>
+            </body>
         </html>
     );
 }
