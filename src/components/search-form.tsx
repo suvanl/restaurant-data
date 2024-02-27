@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { SearchIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const POSTCODE_MIN_LENGTH = 2;
 const POSTCODE_MAX_LENGTH = 8;
@@ -20,7 +21,8 @@ const formSchema = z.object({
         })
         .max(POSTCODE_MAX_LENGTH, {
             message: `Postcode must contain at most ${POSTCODE_MAX_LENGTH} characters`,
-        }),
+        })
+        .trim(),
 });
 
 export const SearchForm = () => {
@@ -29,8 +31,22 @@ export const SearchForm = () => {
         defaultValues: { postcode: "" },
     });
 
+    const router = useRouter();
+
+    /**
+     * Called when the form is submitted and passes client-side validation.
+     * @param formValues The submitted values, in the shape of the formSchema
+     */
     const onSubmit = (formValues: z.infer<typeof formSchema>) => {
-        console.log(formValues);
+        // todo: refactor to use a server action instead of client-side navigation?
+
+        const { postcode } = formValues;
+
+        // Remove all spaces from the postcode
+        const parsedPostcode = postcode.replaceAll(" ", "");
+
+        // Navigate to the dynamic route for the given postcode
+        void router.push(`/${parsedPostcode}`);
     };
 
     return (
