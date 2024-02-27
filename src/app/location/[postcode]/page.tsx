@@ -4,7 +4,7 @@ import {
     isValidRestaurantsResponse,
 } from "@/data/response";
 
-const getData = async (
+const getRestaurantsByPostcode = async (
     postcode: string,
 ): Promise<LimitedEnrichedRestaurantsResponse | null> => {
     const apiUrl = `${API_BASE_URL}/discovery/uk/restaurants/enriched/bypostcode/${postcode}`;
@@ -49,7 +49,7 @@ export default async function Page({
 }: {
     params: { postcode: string };
 }) {
-    const data = await getData(params.postcode);
+    const data = await getRestaurantsByPostcode(params.postcode);
     if (data === null) {
         return <>⚠️ No data</>;
     }
