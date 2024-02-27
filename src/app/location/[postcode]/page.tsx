@@ -3,6 +3,7 @@ import {
     type LimitedEnrichedRestaurantsResponse,
     isValidRestaurantsResponse,
 } from "@/data/response";
+import { Suspense } from "react";
 
 const getRestaurantsByPostcode = async (
     postcode: string,
@@ -49,16 +50,26 @@ export default async function Page({
 }: {
     params: { postcode: string };
 }) {
-    const data = await getRestaurantsByPostcode(params.postcode);
+    return (
+        <section>
+            <h1 className="text-2xl font-bold underline">Restaurant data</h1>
+            <p>Postcode: {params.postcode}</p>
+
+            <Suspense fallback={<>Loading...</>}>
+                <RestaurantCards postcode={params.postcode} />
+            </Suspense>
+        </section>
+    );
+}
+
+const RestaurantCards = async ({ postcode }: { postcode: string }) => {
+    const data = await getRestaurantsByPostcode(postcode);
     if (data === null) {
         return <>⚠️ No data</>;
     }
 
     return (
-        <div>
-            <p>Postcode: {params.postcode}</p>
-            <p>{data.metaData.canonicalName}</p>
-
+        <>
             {data.restaurants.map((restaurant) => (
                 <div key={restaurant.id}>
                     <p className="text-xl font-bold">{restaurant.name}</p>
@@ -69,6 +80,6 @@ export default async function Page({
                     </p>
                 </div>
             ))}
-        </div>
+        </>
     );
-}
+};
