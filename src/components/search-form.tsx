@@ -46,7 +46,7 @@ export const SearchForm = () => {
         const parsedPostcode = postcode.replaceAll(" ", "");
 
         // Navigate to the dynamic route for the given postcode
-        void router.push(`/${parsedPostcode}`);
+        void router.push(`/location/${parsedPostcode}`);
     };
 
     return (
