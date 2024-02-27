@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { SearchIcon } from "lucide-react";
+import { SearchForm } from "@/components/search-form";
 
 export default function HomePage() {
     return (
@@ -9,20 +7,7 @@ export default function HomePage() {
                 Find restaurants in a postcode area
             </h2>
 
-            <form
-                action=""
-                className="flex w-full max-w-2xl items-center gap-x-2"
-            >
-                <Input
-                    type="search"
-                    name="postcode"
-                    placeholder="Enter a postcode e.g., EC4M 7RF"
-                />
-                <Button type="submit" className="flex items-center gap-x-2">
-                    <SearchIcon className="size-5" />
-                    Search
-                </Button>
-            </form>
+            <SearchForm />
         </section>
     );
 }
