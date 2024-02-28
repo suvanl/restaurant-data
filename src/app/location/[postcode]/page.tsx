@@ -11,7 +11,7 @@ import {
     type LimitedEnrichedRestaurantsResponse,
     isValidRestaurantsResponse,
 } from "@/data/response";
-import { Star, UtensilsCrossed } from "lucide-react";
+import { ExternalLinkIcon, Star, UtensilsCrossed } from "lucide-react";
 import { Suspense } from "react";
 
 const getRestaurantsByPostcode = async (
@@ -97,6 +97,8 @@ const Restaurants = async ({ postcode }: { postcode: string }) => {
 
 type Restaurant = LimitedEnrichedRestaurantsResponse["restaurants"][number];
 const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
+    const googleMapsLink = genGoogleMapsLink(restaurant.address.location);
+
     return (
         <Card className="max-w-xl">
             <CardHeader>
@@ -106,8 +108,15 @@ const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
                         <Badge variant="secondary">✨ New</Badge>
                     ) : null}
                 </CardTitle>
-                <CardDescription className="flex items-center gap-x-1 text-pretty">
-                    {formatAddress(restaurant.address)}
+                <CardDescription className="text-pretty">
+                    <a
+                        href={googleMapsLink}
+                        target="_blank"
+                        className="flex max-w-fit items-center gap-x-1.5 hover:underline"
+                    >
+                        {formatAddress(restaurant.address)}
+                        <ExternalLinkIcon className="size-3" />
+                    </a>
                 </CardDescription>
             </CardHeader>
 
@@ -145,4 +154,14 @@ const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
 
 const formatAddress = (address: Restaurant["address"]) => {
     return `${address.firstLine}, ${address.city}, ${address.postalCode}`;
+};
+
+/**
+ * Generates a Google Maps link using the coordinates from the given location
+ * @param location the restaurant's location data
+ * @returns the generated Google Maps link
+ */
+const genGoogleMapsLink = (location: Restaurant["address"]["location"]) => {
+    const [lon, lat] = location.coordinates;
+    return `https://www.google.co.uk/maps/place/${lat},${lon}`;
 };
