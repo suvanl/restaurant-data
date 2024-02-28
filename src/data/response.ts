@@ -11,15 +11,18 @@ export type LimitedEnrichedRestaurantsResponse = {
         district: string;
         postalCode: string;
         area: string;
-        location: {
-            type: "Point";
-            coordinates: [number, number];
-        };
+        location: Location;
         resultCount: number;
     };
     restaurants: {
         id: string;
         name: string;
+        address: {
+            city: string;
+            firstLine: string;
+            postalCode: string;
+            location: Location;
+        };
         rating: {
             count: number;
             starRating: number;
@@ -31,6 +34,11 @@ export type LimitedEnrichedRestaurantsResponse = {
             uniqueName: string;
         }[];
     }[];
+};
+
+type Location = {
+    type: "Point";
+    coordinates: [number, number];
 };
 
 export function isValidRestaurantsResponse(
