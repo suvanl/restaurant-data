@@ -54,7 +54,7 @@ const getRestaurantsByPostcode = async (
     return null;
 };
 
-export default async function Page({
+export default async function ResultsPage({
     params,
 }: {
     params: { postcode: string };
