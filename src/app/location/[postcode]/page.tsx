@@ -112,7 +112,7 @@ const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
                     <a
                         href={googleMapsLink}
                         target="_blank"
-                        className="flex max-w-fit items-center gap-x-1.5 hover:underline"
+                        className="flex max-w-fit flex-wrap items-center gap-x-1.5 hover:underline"
                     >
                         {formatAddress(restaurant.address)}
                         <ExternalLinkIcon className="size-3" />
