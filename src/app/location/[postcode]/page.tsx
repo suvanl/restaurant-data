@@ -61,7 +61,7 @@ export default async function ResultsPage({
 }) {
     return (
         <section>
-            <h1 className="text-2xl font-bold underline">Results</h1>
+            <h1 className="text-3xl font-semibold">Results</h1>
 
             <Suspense fallback={<>Loading...</>}>
                 <Restaurants postcode={params.postcode} />
@@ -83,7 +83,7 @@ const Restaurants = async ({ postcode }: { postcode: string }) => {
                 {`${data.metaData.area} ${data.metaData.postalCode}`}
             </h1>
 
-            <div className="space-y-4">
+            <div className="my-4 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-4">
                 {data.restaurants.map((restaurant) => (
                     <RestaurantCard
                         key={restaurant.id}
@@ -100,9 +100,9 @@ const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
     const googleMapsLink = genGoogleMapsLink(restaurant.address.location);
 
     return (
-        <Card className="max-w-xl">
+        <Card className="max-w-xl lg:max-w-full">
             <CardHeader>
-                <CardTitle className="flex items-center gap-x-2">
+                <CardTitle className="flex items-center gap-x-2 text-balance">
                     {restaurant.name}
                     {restaurant.isNew ? (
                         <Badge variant="secondary">✨ New</Badge>
