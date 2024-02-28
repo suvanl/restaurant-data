@@ -1,8 +1,17 @@
 import { API_BASE_URL } from "@/app/constants";
+import { Badge } from "@/components/ui/badge";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import {
     type LimitedEnrichedRestaurantsResponse,
     isValidRestaurantsResponse,
 } from "@/data/response";
+import { Star, UtensilsCrossed } from "lucide-react";
 import { Suspense } from "react";
 
 const getRestaurantsByPostcode = async (
@@ -52,17 +61,16 @@ export default async function Page({
 }) {
     return (
         <section>
-            <h1 className="text-2xl font-bold underline">Restaurant data</h1>
-            <p>Postcode: {params.postcode}</p>
+            <h1 className="text-2xl font-bold underline">Results</h1>
 
             <Suspense fallback={<>Loading...</>}>
-                <RestaurantCards postcode={params.postcode} />
+                <Restaurants postcode={params.postcode} />
             </Suspense>
         </section>
     );
 }
 
-const RestaurantCards = async ({ postcode }: { postcode: string }) => {
+const Restaurants = async ({ postcode }: { postcode: string }) => {
     const data = await getRestaurantsByPostcode(postcode);
     if (data === null) {
         return <>⚠️ No data</>;
@@ -70,16 +78,71 @@ const RestaurantCards = async ({ postcode }: { postcode: string }) => {
 
     return (
         <>
-            {data.restaurants.map((restaurant) => (
-                <div key={restaurant.id}>
-                    <p className="text-xl font-bold">{restaurant.name}</p>
-                    <p>Rating: {JSON.stringify(restaurant.rating)}</p>
-                    <p>
-                        Cuisines:{" "}
-                        {restaurant.cuisines.map((c) => `${c.name}, `)}
-                    </p>
-                </div>
-            ))}
+            <h1>
+                Restaurants in{" "}
+                {`${data.metaData.area} ${data.metaData.postalCode}`}
+            </h1>
+
+            <div className="space-y-4">
+                {data.restaurants.map((restaurant) => (
+                    <RestaurantCard
+                        key={restaurant.id}
+                        restaurant={restaurant}
+                    />
+                ))}
+            </div>
         </>
     );
+};
+
+type Restaurant = LimitedEnrichedRestaurantsResponse["restaurants"][number];
+const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
+    return (
+        <Card className="max-w-xl">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-x-2">
+                    {restaurant.name}
+                    {restaurant.isNew ? (
+                        <Badge variant="secondary">✨ New</Badge>
+                    ) : null}
+                </CardTitle>
+                <CardDescription className="flex items-center gap-x-1 text-pretty">
+                    {formatAddress(restaurant.address)}
+                </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+                <div className="flex items-center gap-1">
+                    <div>
+                        <Star className="size-4" />
+                        <span className="sr-only">Rating</span>
+                    </div>
+                    <div>
+                        <span className="font-semibold">
+                            {restaurant.rating.starRating}
+                        </span>{" "}
+                        <span className="text-xs text-muted-foreground">
+                            ({restaurant.rating.count} reviews)
+                        </span>
+                    </div>
+                </div>
+
+                <div className="mt-1 flex flex-wrap items-center gap-1">
+                    <div>
+                        <UtensilsCrossed className="size-4" />
+                        <span className="sr-only">Cuisines</span>
+                    </div>
+                    {restaurant.cuisines.map((cuisine) => (
+                        <Badge key={cuisine.uniqueName} variant="outline">
+                            {cuisine.name}
+                        </Badge>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+const formatAddress = (address: Restaurant["address"]) => {
+    return `${address.firstLine}, ${address.city}, ${address.postalCode}`;
 };
