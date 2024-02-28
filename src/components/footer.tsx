@@ -7,7 +7,7 @@ export const Footer = (props: HTMLAttributes<HTMLElement>) => {
 
     return (
         <footer
-            className={cn("text-muted-foreground mb-6 text-sm", className)}
+            className={cn("pb-6 text-sm text-muted-foreground", className)}
             {...attrs}
         >
             <Separator className="mb-4" />
@@ -17,7 +17,7 @@ export const Footer = (props: HTMLAttributes<HTMLElement>) => {
                     Suvan Leelasena &lt;
                     <a
                         href="mailto:suvan@outlook.com"
-                        className="hover:text-foreground underline"
+                        className="underline hover:text-foreground"
                     >
                         suvan@outlook.com
                     </a>
@@ -25,7 +25,7 @@ export const Footer = (props: HTMLAttributes<HTMLElement>) => {
                 </p>
                 <a
                     href="https://github.com/suvanl/restaurant-data"
-                    className="hover:text-foreground underline"
+                    className="underline hover:text-foreground"
                 >
                     View source on GitHub
                 </a>

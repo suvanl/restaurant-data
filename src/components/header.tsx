@@ -1,6 +1,7 @@
 import type { HTMLAttributes } from "react";
 import { ThemeModeToggle } from "./theme-mode-toggle";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export const Header = (props: HTMLAttributes<HTMLElement>) => {
     const { className, ...attrs } = props;
@@ -14,9 +15,12 @@ export const Header = (props: HTMLAttributes<HTMLElement>) => {
             {...attrs}
         >
             <div>
-                <h1 className="font-semibold tracking-tight sm:text-lg">
+                <Link
+                    href="/"
+                    className="font-semibold tracking-tight sm:text-lg"
+                >
                     Restaurant Data Search
-                </h1>
+                </Link>
                 <p className="text-sm sm:text-base">
                     JET Software Engineering Coding Assignment
                 </p>
