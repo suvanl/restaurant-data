@@ -33,12 +33,12 @@ const sortRestaurantData = (
             break;
         case "name-asc":
             sorted = sorted = restaurants.sort((a, b) =>
-                a.name > b.name ? 1 : -1,
+                a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1,
             );
             break;
         case "name-desc":
             sorted = sorted = restaurants.sort((a, b) =>
-                a.name < b.name ? 1 : -1,
+                a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1,
             );
             break;
     }
