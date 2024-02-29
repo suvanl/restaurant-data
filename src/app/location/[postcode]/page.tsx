@@ -1,6 +1,10 @@
 import { API_BASE_URL } from "@/app/constants";
-import { RestaurantCard } from "@/components/restaurant-card";
+import {
+    RestaurantCard,
+    RestaurantCardSkeleton,
+} from "@/components/restaurant-card";
 import { type SortOption, SortSelect } from "@/components/sort-select";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
     type LimitedEnrichedRestaurantsResponse,
     isValidRestaurantsResponse,
@@ -39,12 +43,15 @@ const sortRestaurantData = (
     return sorted;
 };
 
+// The value to use as the limit for the number of restaurants returned in the API response
+const RESTAURANTS_LIMIT = 10;
+
 const getRestaurantsByPostcode = async (
     postcode: string,
     sortBy: SortOption = "default",
 ): Promise<LimitedEnrichedRestaurantsResponse | null> => {
     // Use the "limit" query param to limit the number of Restaurant objects returned to 10
-    const apiUrl = `${API_BASE_URL}/discovery/uk/restaurants/enriched/bypostcode/${postcode}?limit=10`;
+    const apiUrl = `${API_BASE_URL}/discovery/uk/restaurants/enriched/bypostcode/${postcode}?limit=${RESTAURANTS_LIMIT}`;
 
     const res = await fetch(apiUrl, {
         next: {
@@ -89,7 +96,7 @@ export default async function ResultsPage({
         <section>
             <h1 className="text-3xl font-semibold">Results</h1>
 
-            <Suspense fallback={<>Loading...</>}>
+            <Suspense fallback={<RestaurantsFallback />}>
                 <Restaurants
                     postcode={params.postcode}
                     sortBy={(searchParams.sort ?? "default") as SortOption} // Use default sort order if "sort" param is null/undefined
@@ -141,6 +148,28 @@ const Restaurants = async ({
                         key={restaurant.id}
                         restaurant={restaurant}
                     />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const RestaurantsFallback = () => {
+    return (
+        <div className="space-y-5">
+            {/* h1 */}
+            <Skeleton className="h-[16px] w-[196px] rounded-full" />
+
+            {/* SortSelect */}
+            <div className="space-y-2">
+                <Skeleton className="h-[14px] w-[48px] rounded-full" />
+                <Skeleton className="h-[40px] w-[180px] rounded-md" />
+            </div>
+
+            {/* Restaurant cards */}
+            <div className="my-4 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-4">
+                {[...Array<number>(RESTAURANTS_LIMIT)].map((_, i) => (
+                    <RestaurantCardSkeleton key={i} />
                 ))}
             </div>
         </div>

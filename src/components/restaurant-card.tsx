@@ -8,6 +8,21 @@ import {
 } from "./ui/card";
 import { Badge } from "./ui/badge";
 import type { Restaurant } from "@/data/response";
+import { Skeleton } from "./ui/skeleton";
+
+const formatAddress = (address: Restaurant["address"]) => {
+    return `${address.firstLine}, ${address.city}, ${address.postalCode}`;
+};
+
+/**
+ * Generates a Google Maps link using the coordinates from the given location
+ * @param location the restaurant's location data
+ * @returns the generated Google Maps link
+ */
+const genGoogleMapsLink = (location: Restaurant["address"]["location"]) => {
+    const [lon, lat] = location.coordinates;
+    return `https://www.google.co.uk/maps/place/${lat},${lon}`;
+};
 
 export const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
     const googleMapsLink = genGoogleMapsLink(restaurant.address.location);
@@ -65,16 +80,8 @@ export const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
     );
 };
 
-const formatAddress = (address: Restaurant["address"]) => {
-    return `${address.firstLine}, ${address.city}, ${address.postalCode}`;
-};
-
-/**
- * Generates a Google Maps link using the coordinates from the given location
- * @param location the restaurant's location data
- * @returns the generated Google Maps link
- */
-const genGoogleMapsLink = (location: Restaurant["address"]["location"]) => {
-    const [lon, lat] = location.coordinates;
-    return `https://www.google.co.uk/maps/place/${lat},${lon}`;
+export const RestaurantCardSkeleton = () => {
+    return (
+        <Skeleton className="h-[200px] max-w-xl rounded-xl sm:h-[174px] lg:max-w-full" />
+    );
 };
