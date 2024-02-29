@@ -10,24 +10,37 @@ import {
     SelectValue,
 } from "./ui/select";
 
-export const sortOptions = [
-    { id: "default", name: "Default order" },
-    { id: "rating", name: "Rating (high-low)" },
-    { id: "name-asc", name: "Name (A-Z)" },
-    { id: "name-desc", name: "Name (Z-A)" },
-] as const;
+const validSorts = ["default", "rating", "name-asc", "name-desc"] as const;
+export const sortOptions: { id: (typeof validSorts)[number]; name: string }[] =
+    [
+        { id: "default", name: "Default order" },
+        { id: "rating", name: "Rating (high-low)" },
+        { id: "name-asc", name: "Name (A-Z)" },
+        { id: "name-desc", name: "Name (Z-A)" },
+    ];
 
-export type SortOption = (typeof sortOptions)[number]["id"];
-
+export type SortOption = (typeof validSorts)[number];
 export const SortSelect = ({ defaultValue }: { defaultValue: SortOption }) => {
     const router = useRouter();
+
+    /**
+     * Returns a "safe" default value for the <Select>.
+     * It is safe in the sense that it will always be the value of one of the `<SelectItem>`s,
+     * ensuring that the current sort method will be displayed in the <Select>.
+     *
+     * If the value is valid, it will be set as the default value. Otherwise, it will fall back
+     * to "default".
+     */
+    const safeDefaultValue = (value: SortOption) => {
+        return isValidSortOption(value) ? value : "default";
+    };
 
     return (
         <div>
             <Label htmlFor="sort-select-trigger">Sort by</Label>
 
             <Select
-                defaultValue={defaultValue}
+                defaultValue={safeDefaultValue(defaultValue)}
                 onValueChange={(value) =>
                     router.push(
                         `?${new URLSearchParams({ sort: value }).toString()}`,
@@ -49,3 +62,7 @@ export const SortSelect = ({ defaultValue }: { defaultValue: SortOption }) => {
         </div>
     );
 };
+
+function isValidSortOption(option: string): option is SortOption {
+    return validSorts.includes(option);
+}
