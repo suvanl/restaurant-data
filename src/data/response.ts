@@ -41,6 +41,9 @@ type Location = {
     coordinates: [number, number];
 };
 
+export type Restaurant =
+    LimitedEnrichedRestaurantsResponse["restaurants"][number];
+
 export function isValidRestaurantsResponse(
     data: object,
 ): data is LimitedEnrichedRestaurantsResponse {
