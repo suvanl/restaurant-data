@@ -17,17 +17,15 @@ import { Suspense } from "react";
 const getRestaurantsByPostcode = async (
     postcode: string,
 ): Promise<LimitedEnrichedRestaurantsResponse | null> => {
-    const apiUrl = `${API_BASE_URL}/discovery/uk/restaurants/enriched/bypostcode/${postcode}`;
+    // Use the "limit" query param to limit the number of Restaurant objects returned to 10
+    const apiUrl = `${API_BASE_URL}/discovery/uk/restaurants/enriched/bypostcode/${postcode}?limit=10`;
 
-    // As this is dynamic data which is subject to change on every request, bypass
-    // the default Next.js caching behaviour by setting `cache` to "no-store".
-    //
-    // Since the responsees are typically large, it would actually be useful to cache this
-    // data and revalidate after a short amount of time (i.e., a few mins), but we can't
-    // use the cache for responses over 2MB (hardcoded Next.js limit).
-    // See https://github.com/vercel/next.js/discussions/48324
-    const res = await fetch(apiUrl, { cache: "no-store" });
-
+    const res = await fetch(apiUrl, {
+        next: {
+            // Revalidate the cached data after 3 minutes (180 s)
+            revalidate: 180,
+        },
+    });
     const data = await res.json();
 
     if (
@@ -47,7 +45,7 @@ const getRestaurantsByPostcode = async (
         // https://uk.api.just-eat.io/docs#operation/discoveryTenantRestaurantsEnrichedBypostcodePostcodeGet
         return {
             metaData,
-            restaurants: restaurants.slice(0, 10), // only use the first 10 restaurants
+            restaurants: restaurants,
         } as const;
     }
 
