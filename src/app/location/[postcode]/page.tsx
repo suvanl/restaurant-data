@@ -13,6 +13,7 @@ import {
     isValidRestaurantsResponse,
 } from "@/data/response";
 import { ExternalLinkIcon, Star, UtensilsCrossed } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 
 const sortRestaurantData = (
@@ -105,6 +106,16 @@ export default async function ResultsPage({
             </Suspense>
         </section>
     );
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: { postcode: string };
+}): Promise<Metadata> {
+    return {
+        title: `Restaurants in ${params.postcode.toUpperCase()} - Restaurant Data`,
+    };
 }
 
 const Restaurants = async ({
