@@ -33,12 +33,12 @@ const sortRestaurantData = (
             break;
         case "name-asc":
             sorted = sorted = restaurants.sort((a, b) =>
-                a.name > b.name ? 1 : -1,
+                a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1,
             );
             break;
         case "name-desc":
             sorted = sorted = restaurants.sort((a, b) =>
-                a.name < b.name ? 1 : -1,
+                a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1,
             );
             break;
     }
@@ -85,13 +85,12 @@ const getRestaurantsByPostcode = async (
     return null;
 };
 
-type SearchParams = Record<string, string | string[] | undefined>;
 export default async function ResultsPage({
     params,
     searchParams,
 }: {
     params: { postcode: string };
-    searchParams: SearchParams;
+    searchParams: Record<string, string | string[] | undefined>;
 }) {
     return (
         <section>
@@ -100,8 +99,8 @@ export default async function ResultsPage({
             <Suspense fallback={<>Loading...</>}>
                 <Restaurants
                     postcode={params.postcode}
-                    // Use default sort order if "sort" param is null/undefined
-                    sortBy={(searchParams.sort ?? "default") as SortOption}
+                    sortBy={(searchParams.sort ?? "default") as SortOption} // Use default sort order if "sort" param is null/undefined
+                    fetcher={getRestaurantsByPostcode}
                 />
             </Suspense>
         </section>
@@ -121,11 +120,16 @@ export async function generateMetadata({
 const Restaurants = async ({
     postcode,
     sortBy,
+    fetcher,
 }: {
     postcode: string;
     sortBy: SortOption;
+    fetcher: (
+        postcode: string,
+        sortBy?: SortOption,
+    ) => Promise<LimitedEnrichedRestaurantsResponse | null>;
 }) => {
-    const data = await getRestaurantsByPostcode(postcode, sortBy);
+    const data = await fetcher(postcode, sortBy);
     if (data === null) {
         return <>⚠️ No data</>;
     }
