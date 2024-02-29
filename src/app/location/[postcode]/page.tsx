@@ -85,13 +85,12 @@ const getRestaurantsByPostcode = async (
     return null;
 };
 
-type SearchParams = Record<string, string | string[] | undefined>;
 export default async function ResultsPage({
     params,
     searchParams,
 }: {
     params: { postcode: string };
-    searchParams: SearchParams;
+    searchParams: Record<string, string | string[] | undefined>;
 }) {
     return (
         <section>
