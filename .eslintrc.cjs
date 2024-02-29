@@ -33,6 +33,7 @@ const config = {
             },
         ],
         "@typescript-eslint/no-unnecessary-condition": "error",
+        "@typescript-eslint/switch-exhaustiveness-check": "error",
     },
 };
 

@@ -1,18 +1,15 @@
 import { API_BASE_URL } from "@/app/constants";
-import { type SortOption, SortSelect } from "@/components/sort-select";
-import { Badge } from "@/components/ui/badge";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+    RestaurantCard,
+    RestaurantCardSkeleton,
+} from "@/components/restaurant-card";
+import { type SortOption, SortSelect } from "@/components/sort-select";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
     type LimitedEnrichedRestaurantsResponse,
     isValidRestaurantsResponse,
+    type Restaurant,
 } from "@/data/response";
-import { ExternalLinkIcon, Star, UtensilsCrossed } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -46,12 +43,15 @@ const sortRestaurantData = (
     return sorted;
 };
 
+// The value to use as the limit for the number of restaurants returned in the API response
+const RESTAURANTS_LIMIT = 10;
+
 const getRestaurantsByPostcode = async (
     postcode: string,
     sortBy: SortOption = "default",
 ): Promise<LimitedEnrichedRestaurantsResponse | null> => {
     // Use the "limit" query param to limit the number of Restaurant objects returned to 10
-    const apiUrl = `${API_BASE_URL}/discovery/uk/restaurants/enriched/bypostcode/${postcode}?limit=10`;
+    const apiUrl = `${API_BASE_URL}/discovery/uk/restaurants/enriched/bypostcode/${postcode}?limit=${RESTAURANTS_LIMIT}`;
 
     const res = await fetch(apiUrl, {
         next: {
@@ -96,7 +96,7 @@ export default async function ResultsPage({
         <section>
             <h1 className="text-3xl font-semibold">Results</h1>
 
-            <Suspense fallback={<>Loading...</>}>
+            <Suspense fallback={<RestaurantsFallback />}>
                 <Restaurants
                     postcode={params.postcode}
                     sortBy={(searchParams.sort ?? "default") as SortOption} // Use default sort order if "sort" param is null/undefined
@@ -154,73 +154,24 @@ const Restaurants = async ({
     );
 };
 
-type Restaurant = LimitedEnrichedRestaurantsResponse["restaurants"][number];
-const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
-    const googleMapsLink = genGoogleMapsLink(restaurant.address.location);
-
+const RestaurantsFallback = () => {
     return (
-        <Card className="max-w-xl lg:max-w-full">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-x-2 text-balance">
-                    {restaurant.name}
-                    {restaurant.isNew ? (
-                        <Badge variant="secondary">✨ New</Badge>
-                    ) : null}
-                </CardTitle>
-                <CardDescription className="text-pretty">
-                    <a
-                        href={googleMapsLink}
-                        target="_blank"
-                        className="flex max-w-fit flex-wrap items-center gap-x-1.5 hover:underline"
-                    >
-                        {formatAddress(restaurant.address)}
-                        <ExternalLinkIcon className="size-3" />
-                    </a>
-                </CardDescription>
-            </CardHeader>
+        <div className="space-y-5">
+            {/* h1 */}
+            <Skeleton className="h-[16px] w-[196px] rounded-full" />
 
-            <CardContent>
-                <div className="flex items-center gap-1">
-                    <div>
-                        <Star className="size-4" />
-                        <span className="sr-only">Rating</span>
-                    </div>
-                    <div>
-                        <span className="font-semibold">
-                            {restaurant.rating.starRating.toFixed(1)}
-                        </span>{" "}
-                        <span className="text-xs text-muted-foreground">
-                            ({restaurant.rating.count} reviews)
-                        </span>
-                    </div>
-                </div>
+            {/* SortSelect */}
+            <div className="space-y-2">
+                <Skeleton className="h-[14px] w-[48px] rounded-full" />
+                <Skeleton className="h-[40px] w-[180px] rounded-md" />
+            </div>
 
-                <div className="mt-1 flex flex-wrap items-center gap-1">
-                    <div>
-                        <UtensilsCrossed className="size-4" />
-                        <span className="sr-only">Cuisines</span>
-                    </div>
-                    {restaurant.cuisines.map((cuisine) => (
-                        <Badge key={cuisine.uniqueName} variant="outline">
-                            {cuisine.name}
-                        </Badge>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
+            {/* Restaurant cards */}
+            <div className="my-4 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-4">
+                {[...Array<number>(RESTAURANTS_LIMIT)].map((_, i) => (
+                    <RestaurantCardSkeleton key={i} />
+                ))}
+            </div>
+        </div>
     );
-};
-
-const formatAddress = (address: Restaurant["address"]) => {
-    return `${address.firstLine}, ${address.city}, ${address.postalCode}`;
-};
-
-/**
- * Generates a Google Maps link using the coordinates from the given location
- * @param location the restaurant's location data
- * @returns the generated Google Maps link
- */
-const genGoogleMapsLink = (location: Restaurant["address"]["location"]) => {
-    const [lon, lat] = location.coordinates;
-    return `https://www.google.co.uk/maps/place/${lat},${lon}`;
 };
