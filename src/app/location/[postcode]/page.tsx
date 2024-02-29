@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/app/constants";
+import { type SortOption, SortSelect } from "@/components/sort-select";
 import { Badge } from "@/components/ui/badge";
 import {
     Card,
@@ -12,22 +13,52 @@ import {
     isValidRestaurantsResponse,
 } from "@/data/response";
 import { ExternalLinkIcon, Star, UtensilsCrossed } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
+
+const sortRestaurantData = (
+    restaurants: Restaurant[],
+    sortBy: SortOption,
+): Restaurant[] => {
+    let sorted = restaurants;
+
+    switch (sortBy) {
+        case "default":
+            sorted = restaurants;
+            break;
+        case "rating":
+            sorted = restaurants.sort(
+                (a, b) => b.rating.starRating - a.rating.starRating,
+            );
+            break;
+        case "name-asc":
+            sorted = sorted = restaurants.sort((a, b) =>
+                a.name > b.name ? 1 : -1,
+            );
+            break;
+        case "name-desc":
+            sorted = sorted = restaurants.sort((a, b) =>
+                a.name < b.name ? 1 : -1,
+            );
+            break;
+    }
+
+    return sorted;
+};
 
 const getRestaurantsByPostcode = async (
     postcode: string,
+    sortBy: SortOption = "default",
 ): Promise<LimitedEnrichedRestaurantsResponse | null> => {
-    const apiUrl = `${API_BASE_URL}/discovery/uk/restaurants/enriched/bypostcode/${postcode}`;
+    // Use the "limit" query param to limit the number of Restaurant objects returned to 10
+    const apiUrl = `${API_BASE_URL}/discovery/uk/restaurants/enriched/bypostcode/${postcode}?limit=10`;
 
-    // As this is dynamic data which is subject to change on every request, bypass
-    // the default Next.js caching behaviour by setting `cache` to "no-store".
-    //
-    // Since the responsees are typically large, it would actually be useful to cache this
-    // data and revalidate after a short amount of time (i.e., a few mins), but we can't
-    // use the cache for responses over 2MB (hardcoded Next.js limit).
-    // See https://github.com/vercel/next.js/discussions/48324
-    const res = await fetch(apiUrl, { cache: "no-store" });
-
+    const res = await fetch(apiUrl, {
+        next: {
+            // Revalidate the cached data after 3 minutes (180 s)
+            revalidate: 180,
+        },
+    });
     const data = await res.json();
 
     if (
@@ -47,41 +78,65 @@ const getRestaurantsByPostcode = async (
         // https://uk.api.just-eat.io/docs#operation/discoveryTenantRestaurantsEnrichedBypostcodePostcodeGet
         return {
             metaData,
-            restaurants: restaurants.slice(0, 10), // only use the first 10 restaurants
+            restaurants: sortRestaurantData(restaurants, sortBy),
         } as const;
     }
 
     return null;
 };
 
+type SearchParams = Record<string, string | string[] | undefined>;
 export default async function ResultsPage({
     params,
+    searchParams,
 }: {
     params: { postcode: string };
+    searchParams: SearchParams;
 }) {
     return (
         <section>
             <h1 className="text-3xl font-semibold">Results</h1>
 
             <Suspense fallback={<>Loading...</>}>
-                <Restaurants postcode={params.postcode} />
+                <Restaurants
+                    postcode={params.postcode}
+                    // Use default sort order if "sort" param is null/undefined
+                    sortBy={(searchParams.sort ?? "default") as SortOption}
+                />
             </Suspense>
         </section>
     );
 }
 
-const Restaurants = async ({ postcode }: { postcode: string }) => {
-    const data = await getRestaurantsByPostcode(postcode);
+export async function generateMetadata({
+    params,
+}: {
+    params: { postcode: string };
+}): Promise<Metadata> {
+    return {
+        title: `Restaurants in ${params.postcode.toUpperCase()} - Restaurant Data`,
+    };
+}
+
+const Restaurants = async ({
+    postcode,
+    sortBy,
+}: {
+    postcode: string;
+    sortBy: SortOption;
+}) => {
+    const data = await getRestaurantsByPostcode(postcode, sortBy);
     if (data === null) {
         return <>⚠️ No data</>;
     }
 
     return (
-        <>
+        <div className="space-y-4">
             <h1>
                 Restaurants in{" "}
                 {`${data.metaData.area} ${data.metaData.postalCode}`}
             </h1>
+            <SortSelect defaultValue={sortBy} />
 
             <div className="my-4 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-4">
                 {data.restaurants.map((restaurant) => (
@@ -91,7 +146,7 @@ const Restaurants = async ({ postcode }: { postcode: string }) => {
                     />
                 ))}
             </div>
-        </>
+        </div>
     );
 };
 
@@ -128,7 +183,7 @@ const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
                     </div>
                     <div>
                         <span className="font-semibold">
-                            {restaurant.rating.starRating}
+                            {restaurant.rating.starRating.toFixed(1)}
                         </span>{" "}
                         <span className="text-xs text-muted-foreground">
                             ({restaurant.rating.count} reviews)
