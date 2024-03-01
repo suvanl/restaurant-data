@@ -8,15 +8,13 @@ This solution is a web app built with [Next.js](https://nextjs.org/).
 
 ### Building and running the app
 
-<!-- prettier-ignore -->
-> [!NOTE]
-> [Node.js](https://nodejs.org/) is a prerequisite.
+[Node.js](https://nodejs.org/) is a prerequisite.
+
+> [!IMPORTANT]
+> All commands should be run from the project root.
 
 1.  Clone or download this repository
 2.  Install dependencies
-
-    > [!IMPORTANT]
-    > All commands should be run from the project root.
 
     ```sh
     npm install
