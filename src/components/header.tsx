@@ -17,7 +17,7 @@ export const Header = (props: HTMLAttributes<HTMLElement>) => {
             <div>
                 <Link
                     href="/"
-                    className="font-semibold tracking-tight sm:text-lg"
+                    className="font-semibold tracking-tight hover:underline sm:text-lg"
                 >
                     Restaurant Data Search
                 </Link>
