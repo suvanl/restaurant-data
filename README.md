@@ -5,9 +5,13 @@ This is the source code for the solution developed for the Just Eat Takeaway.com
 This solution is a web app built with [Next.js](https://nextjs.org/).
 
 ## Demo
+
 The following demo video highlights the web app's functionality. Specifically: fetching 10 restaurants based on the given postcode, displaying the required data points, and sorting the data using the available sort methods.
 
-https://github.com/suvanl/restaurant-data/assets/32813609/e6d0edc1-1e0c-4736-8bc4-4d9f1d6de93f
+<details>
+    <summary><b>Video</b></summary>
+    https://github.com/suvanl/restaurant-data/assets/32813609/e6d0edc1-1e0c-4736-8bc4-4d9f1d6de93f
+</details>
 
 ## Documentation
 
@@ -46,7 +50,7 @@ https://github.com/suvanl/restaurant-data/assets/32813609/e6d0edc1-1e0c-4736-8bc
 5.  Open the web app. The terminal output of `npm start` will display the local URL it is running at. By default, this is [http://localhost:3000](http://localhost:3000).
 
 <details>
-<summary>Development mode</summary>
+<summary><b>Development mode</b></summary>
 To run this app in development mode (with hot reloading, error reporting, etc) replace steps 3 and 4 with the following command:
 
 ```sh
