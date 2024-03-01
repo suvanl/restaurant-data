@@ -14,6 +14,12 @@ import { type SortOption, sortOptions, isValidSortOption } from "@/lib/sort";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
+/**
+ * Sorts the list of restaurants based on the given sort option.
+ * @param restaurants Original array of Restaurant objects
+ * @param sortBy The sort method to use
+ * @returns Sorted array of Restaurant objects
+ */
 const sortRestaurantData = (
     restaurants: Restaurant[],
     sortBy: SortOption,
