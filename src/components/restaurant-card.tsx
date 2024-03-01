@@ -30,7 +30,7 @@ export const RestaurantCard = ({ restaurant }: { restaurant: Restaurant }) => {
     return (
         <Card className="max-w-xl lg:max-w-full">
             <CardHeader>
-                <CardTitle className="flex items-center gap-x-2 text-balance">
+                <CardTitle className="flex flex-wrap items-center gap-x-2 text-balance">
                     {restaurant.name}
                     {restaurant.isNew ? (
                         <Badge variant="secondary">✨ New</Badge>
