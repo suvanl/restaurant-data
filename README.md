@@ -8,10 +8,7 @@ This solution is a web app built with [Next.js](https://nextjs.org/).
 
 The following demo video highlights the web app's functionality. Specifically: fetching 10 restaurants based on the given postcode, displaying the required data points, and sorting the data using the available sort methods.
 
-<details>
-    <summary><b>Video</b></summary>
-    https://github.com/suvanl/restaurant-data/assets/32813609/e6d0edc1-1e0c-4736-8bc4-4d9f1d6de93f
-</details>
+https://github.com/suvanl/restaurant-data/assets/32813609/e6d0edc1-1e0c-4736-8bc4-4d9f1d6de93f
 
 ## Documentation
 
@@ -38,8 +35,6 @@ The following demo video highlights the web app's functionality. Specifically: f
     # or
     pnpm build
     ```
-
-    <small>Creates an optimised production build of the app.</small>
 
 4.  Run the app
     ```sh
