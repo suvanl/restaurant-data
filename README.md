@@ -69,6 +69,11 @@ The [`src`](https://github.com/suvanl/restaurant-data/tree/main/src) folder cont
 -   **lib** - Contains application logic and constants that are used throughout the app.
 -   **styles** - Contains the global stylesheet containing Tailwind CSS directives and CSS variables for the light and dark colour themes.
 
+## Assumptions
+
+-   Assumed that the `limit` query parameter is stable for the "get enriched restaurants by postcode" endpoint.
+    -   This query param is undocumented for this endpoint, but successfully limits the size of the `restaurants` array as expected (in this case, to 10 (`?limit=10`)), and seems to be stable based on some manual testing.
+
 ## Future improvements
 
 The following improvements could be made to this solution:
