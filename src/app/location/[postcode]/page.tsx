@@ -1,10 +1,5 @@
-import { API_BASE_URL } from "@/app/constants";
-import {
-    RestaurantCard,
-    RestaurantCardSkeleton,
-} from "@/components/restaurant-card";
-import { SortSelect } from "@/components/sort-select";
-import { Skeleton } from "@/components/ui/skeleton";
+import { API_BASE_URL, RESTAURANTS_LIMIT } from "@/app/constants";
+import { Restaurants, RestaurantsFallback } from "@/components/restaurants";
 import {
     type LimitedEnrichedRestaurantsResponse,
     isValidRestaurantsResponse,
@@ -30,9 +25,14 @@ const sortRestaurantData = (
     return sortOptions[selectedOption].sortFn(restaurants);
 };
 
-// The value to use as the limit for the number of restaurants returned in the API response
-const RESTAURANTS_LIMIT = 10;
-
+/**
+ * Retrieves the data from the "get enriched restaurants by postcode" endpoint and sorts
+ * the `restaurants` array in the response by the given {@link sortBy} method.
+ * @param postcode The postcode to retrieve restaurants for.
+ * @param sortBy The sort method to use on the returned `restaurants` array.
+ * @returns Enriched restaurants data, or `null` if the response doesn't have a status of 200
+ * or doesn't match the expected type definition.
+ */
 const getRestaurantsByPostcode = async (
     postcode: string,
     sortBy: SortOption = "default",
@@ -99,66 +99,8 @@ export async function generateMetadata({
 }: {
     params: { postcode: string };
 }): Promise<Metadata> {
+    // Dynamically generate the document <title>
     return {
         title: `Restaurants in ${params.postcode.toUpperCase()} - Restaurant Data`,
     };
 }
-
-const Restaurants = async ({
-    postcode,
-    sortBy,
-    fetcher,
-}: {
-    postcode: string;
-    sortBy: SortOption;
-    fetcher: (
-        postcode: string,
-        sortBy?: SortOption,
-    ) => Promise<LimitedEnrichedRestaurantsResponse | null>;
-}) => {
-    const data = await fetcher(postcode, sortBy);
-    if (data === null) {
-        return <>⚠️ No data</>;
-    }
-
-    return (
-        <div className="space-y-4">
-            <h1>
-                Restaurants in{" "}
-                {`${data.metaData.area} ${data.metaData.postalCode}`}
-            </h1>
-            <SortSelect defaultValue={sortBy} />
-
-            <div className="my-4 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-4">
-                {data.restaurants.map((restaurant) => (
-                    <RestaurantCard
-                        key={restaurant.id}
-                        restaurant={restaurant}
-                    />
-                ))}
-            </div>
-        </div>
-    );
-};
-
-const RestaurantsFallback = () => {
-    return (
-        <div className="space-y-5">
-            {/* h1 */}
-            <Skeleton className="h-[16px] w-[196px] rounded-full" />
-
-            {/* SortSelect */}
-            <div className="space-y-2">
-                <Skeleton className="h-[14px] w-[48px] rounded-full" />
-                <Skeleton className="h-[40px] w-[180px] rounded-md" />
-            </div>
-
-            {/* Restaurant cards */}
-            <div className="my-4 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-4">
-                {[...Array<number>(RESTAURANTS_LIMIT)].map((_, i) => (
-                    <RestaurantCardSkeleton key={i} />
-                ))}
-            </div>
-        </div>
-    );
-};
