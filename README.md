@@ -90,7 +90,6 @@ The following improvements could be made to this solution:
 
 -   Display the restaurant's logo in the `<RestaurantCard />` component (using the `logoUrl` property in the Restaurant object as the image source).
 -   Add more sort options, such as "number of ratings", and "rating (low-high)".
--   Make the layout configurable, i.e., let users choose between a grid layout and list layout (if the screen size permits it).
 -   Validate postcode from ResultsPage (server component) to improve UX when navigating directly to the URL (bypassing the SearchForm).
 
 ---
