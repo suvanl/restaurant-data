@@ -5,8 +5,9 @@ This is the source code for the solution developed for the Just Eat Takeaway.com
 This solution is a web app built with [Next.js](https://nextjs.org/).
 
 ## Demo
+The following demo video highlights the web app's functionality. Specifically: fetching 10 restaurants based on the given postcode, displaying the required data points, and sorting the data using the available sort methods.
 
-<!-- TODO -->
+https://github.com/suvanl/restaurant-data/assets/32813609/e6d0edc1-1e0c-4736-8bc4-4d9f1d6de93f
 
 ## Documentation
 
