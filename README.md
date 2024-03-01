@@ -56,6 +56,15 @@ pnpm dev
 
 </details>
 
+### Usage
+
+Once the app has been built and is running, it can be used like so:
+
+1. Enter a valid UK postcode into the search input field on the homepage.
+2. Press the "Search" button or use the enter key.
+3. The required data points (name, cuisines, rating (as a number), address) are displayed for each restaurant.
+4. (optional) Sort the data in a different order by selecting an option from the "Sort by" menu.
+
 ### Architecture and patterns
 
 This app uses modern Next.js and React features such as the [app router](https://nextjs.org/docs/app), [server components](https://react.dev/blog/2023/03/22/react-labs-what-we-have-been-working-on-march-2023#react-server-components) (RSCs), and streaming server-side rendering with [Suspense](https://react.dev/reference/react/Suspense).
