@@ -1,4 +1,4 @@
-import { API_BASE_URL, RESTAURANTS_LIMIT } from "@/app/constants";
+import { API_BASE_URL, RESTAURANTS_LIMIT } from "@/lib/constants";
 import { Restaurants, RestaurantsFallback } from "@/components/restaurants";
 import {
     type LimitedEnrichedRestaurantsResponse,

@@ -3,7 +3,7 @@ import type { SortOption } from "@/lib/sort";
 import { SortSelect } from "./sort-select";
 import { RestaurantCard, RestaurantCardSkeleton } from "./restaurant-card";
 import { Skeleton } from "./ui/skeleton";
-import { RESTAURANTS_LIMIT } from "@/app/constants";
+import { RESTAURANTS_LIMIT } from "@/lib/constants";
 
 /**
  * Retrieves the data by calling the {@link fetcher} and renders a
