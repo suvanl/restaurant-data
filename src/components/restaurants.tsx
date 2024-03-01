@@ -4,6 +4,9 @@ import { SortSelect } from "./sort-select";
 import { RestaurantCard, RestaurantCardSkeleton } from "./restaurant-card";
 import { Skeleton } from "./ui/skeleton";
 import { RESTAURANTS_LIMIT } from "@/lib/constants";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { ArrowLeft, CircleSlash } from "lucide-react";
+import Link from "next/link";
 
 /**
  * Retrieves the data by calling the {@link fetcher} and renders a
@@ -24,7 +27,11 @@ export const Restaurants = async ({
     // Get the data from the data source (i.e., the Just Eat API in production)
     const data = await fetcher(postcode, sortBy);
     if (data === null) {
-        return <>⚠️ No data</>;
+        return <ErrorAlert reason="null-data" />;
+    }
+
+    if (!data.restaurants.length) {
+        return <ErrorAlert reason="empty-restaurants-array" />;
     }
 
     return (
@@ -66,5 +73,44 @@ export const RestaurantsFallback = () => {
                 ))}
             </div>
         </div>
+    );
+};
+
+const ErrorAlert = ({
+    reason,
+}: {
+    reason: "null-data" | "empty-restaurants-array";
+}) => {
+    const text: Record<typeof reason, { title: string; description: string }> =
+        {
+            "null-data": {
+                title: "Something went wrong",
+                description:
+                    "An error occurred and we couldn't get any data for the requested postcode.",
+            },
+            "empty-restaurants-array": {
+                title: "No restaurants were found at this postcode",
+                description: "Try again with a different postcode.",
+            },
+        };
+
+    return (
+        <>
+            <Alert variant="destructive" className="mt-4">
+                <CircleSlash className="size-4" />
+
+                <AlertTitle>{text[reason].title}</AlertTitle>
+                <AlertDescription>{text[reason].description}</AlertDescription>
+            </Alert>
+
+            <Link
+                href="/"
+                className="mt-2 flex items-center gap-2 text-sm text-muted-foreground underline transition-colors hover:text-foreground"
+                replace
+            >
+                <ArrowLeft className="size-4" />
+                Go back
+            </Link>
+        </>
     );
 };
