@@ -9,17 +9,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "./ui/select";
+import {
+    sortIds,
+    type SortOption,
+    sortOptions,
+    isValidSortOption,
+} from "@/lib/sort";
 
-const validSorts = ["default", "rating", "name-asc", "name-desc"] as const;
-export const sortOptions: { id: (typeof validSorts)[number]; name: string }[] =
-    [
-        { id: "default", name: "Default order" },
-        { id: "rating", name: "Rating (high-low)" },
-        { id: "name-asc", name: "Name (A-Z)" },
-        { id: "name-desc", name: "Name (Z-A)" },
-    ];
-
-export type SortOption = (typeof validSorts)[number];
 export const SortSelect = ({ defaultValue }: { defaultValue: SortOption }) => {
     const router = useRouter();
 
@@ -52,9 +48,9 @@ export const SortSelect = ({ defaultValue }: { defaultValue: SortOption }) => {
                 </SelectTrigger>
 
                 <SelectContent>
-                    {sortOptions.map((option) => (
-                        <SelectItem key={option.id} value={option.id}>
-                            {option.name}
+                    {sortIds.map((option) => (
+                        <SelectItem key={option} value={option}>
+                            {sortOptions[option].name}
                         </SelectItem>
                     ))}
                 </SelectContent>
@@ -62,7 +58,3 @@ export const SortSelect = ({ defaultValue }: { defaultValue: SortOption }) => {
         </div>
     );
 };
-
-function isValidSortOption(option: string): option is SortOption {
-    return validSorts.includes(option);
-}

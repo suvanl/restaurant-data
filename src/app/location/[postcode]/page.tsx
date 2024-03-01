@@ -3,13 +3,14 @@ import {
     RestaurantCard,
     RestaurantCardSkeleton,
 } from "@/components/restaurant-card";
-import { type SortOption, SortSelect } from "@/components/sort-select";
+import { SortSelect } from "@/components/sort-select";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
     type LimitedEnrichedRestaurantsResponse,
     isValidRestaurantsResponse,
     type Restaurant,
 } from "@/data/response";
+import { type SortOption, sortOptions, isValidSortOption } from "@/lib/sort";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -17,30 +18,10 @@ const sortRestaurantData = (
     restaurants: Restaurant[],
     sortBy: SortOption,
 ): Restaurant[] => {
-    let sorted = restaurants;
-
-    switch (sortBy) {
-        case "default":
-            sorted = restaurants;
-            break;
-        case "rating":
-            sorted = restaurants.sort(
-                (a, b) => b.rating.starRating - a.rating.starRating,
-            );
-            break;
-        case "name-asc":
-            sorted = sorted = restaurants.sort((a, b) =>
-                a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1,
-            );
-            break;
-        case "name-desc":
-            sorted = sorted = restaurants.sort((a, b) =>
-                a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1,
-            );
-            break;
-    }
-
-    return sorted;
+    const selectedOption: SortOption = isValidSortOption(sortBy)
+        ? sortBy
+        : "default";
+    return sortOptions[selectedOption].sortFn(restaurants);
 };
 
 // The value to use as the limit for the number of restaurants returned in the API response
