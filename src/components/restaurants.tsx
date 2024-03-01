@@ -1,4 +1,4 @@
-import type { LimitedEnrichedRestaurantsResponse } from "@/data/response";
+import type { LimitedEnrichedRestaurantsResponse } from "@/lib/response";
 import type { SortOption } from "@/lib/sort";
 import { SortSelect } from "./sort-select";
 import { RestaurantCard, RestaurantCardSkeleton } from "./restaurant-card";

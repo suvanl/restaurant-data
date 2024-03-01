@@ -7,7 +7,7 @@ import {
     CardTitle,
 } from "./ui/card";
 import { Badge } from "./ui/badge";
-import type { Restaurant } from "@/data/response";
+import type { Restaurant } from "@/lib/response";
 import { Skeleton } from "./ui/skeleton";
 
 const formatAddress = (address: Restaurant["address"]) => {
