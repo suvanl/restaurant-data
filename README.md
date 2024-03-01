@@ -63,7 +63,8 @@ Once the app has been built and is running, it can be used like so:
 1. Enter a valid UK postcode into the search input field on the homepage.
 2. Press the "Search" button or use the enter key.
 3. The required data points (name, cuisines, rating (as a number), address) are displayed for each restaurant.
-4. (optional) Sort the data in a different order by selecting an option from the "Sort by" menu.
+4. (optional) Click on an address to view its location on Google Maps.
+5. (optional) Sort the data in a different order by selecting an option from the "Sort by" menu.
 
 ### Architecture and patterns
 
