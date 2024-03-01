@@ -19,6 +19,7 @@ const sortRestaurantData = (
     restaurants: Restaurant[],
     sortBy: SortOption,
 ): Restaurant[] => {
+    // Fall back to "default" if the sort option is invalid
     const selectedOption: SortOption = isValidSortOption(sortBy)
         ? sortBy
         : "default";
