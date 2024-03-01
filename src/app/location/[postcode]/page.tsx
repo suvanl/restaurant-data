@@ -4,7 +4,7 @@ import {
     type LimitedEnrichedRestaurantsResponse,
     isValidRestaurantsResponse,
     type Restaurant,
-} from "@/data/response";
+} from "@/lib/response";
 import { type SortOption, sortOptions, isValidSortOption } from "@/lib/sort";
 import type { Metadata } from "next";
 import { Suspense } from "react";

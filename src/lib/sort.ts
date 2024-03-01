@@ -1,4 +1,4 @@
-import type { Restaurant } from "@/data/response";
+import type { Restaurant } from "@/lib/response";
 
 export type SortOption = (typeof sortIds)[number];
 
