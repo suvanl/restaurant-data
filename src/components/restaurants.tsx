@@ -13,19 +13,14 @@ import Link from "next/link";
  * {@link RestaurantCard} for each returned restaurant.
  */
 export const Restaurants = async ({
-    postcode,
     sortBy,
     fetcher,
 }: {
-    postcode: string;
     sortBy: SortOption;
-    fetcher: (
-        postcode: string,
-        sortBy?: SortOption,
-    ) => Promise<LimitedEnrichedRestaurantsResponse | null>;
+    fetcher: () => Promise<LimitedEnrichedRestaurantsResponse | null>;
 }) => {
     // Get the data from the data source (i.e., the Just Eat API in production)
-    const data = await fetcher(postcode, sortBy);
+    const data = await fetcher();
     if (data === null) {
         return <ErrorAlert reason="null-data" />;
     }

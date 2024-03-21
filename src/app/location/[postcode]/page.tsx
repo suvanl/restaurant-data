@@ -80,15 +80,22 @@ export default async function ResultsPage({
     params: { postcode: string };
     searchParams: Record<string, string | string[] | undefined>;
 }) {
+    // Use default sort order if "sort" param is null/undefined
+    const sortBy =
+        searchParams.sort && typeof searchParams.sort === "string"
+            ? (searchParams.sort as SortOption)
+            : "default";
+
     return (
         <section>
             <h1 className="text-3xl font-semibold">Results</h1>
 
             <Suspense fallback={<RestaurantsFallback />}>
                 <Restaurants
-                    postcode={params.postcode}
-                    sortBy={(searchParams.sort ?? "default") as SortOption} // Use default sort order if "sort" param is null/undefined
-                    fetcher={getRestaurantsByPostcode}
+                    sortBy={sortBy}
+                    fetcher={() =>
+                        getRestaurantsByPostcode(params.postcode, sortBy)
+                    }
                 />
             </Suspense>
         </section>
