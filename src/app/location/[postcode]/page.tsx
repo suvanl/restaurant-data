@@ -80,10 +80,13 @@ export default async function ResultsPage({
     params: { postcode: string };
     searchParams: Record<string, string | string[] | undefined>;
 }) {
-    // Use default sort order if "sort" param is null/undefined
+    // Use default sort order if the "sort" param is null/undefined/not a string,
+    // or is not a valid sort option string.
     const sortBy =
-        searchParams.sort && typeof searchParams.sort === "string"
-            ? (searchParams.sort as SortOption)
+        searchParams.sort &&
+        typeof searchParams.sort === "string" &&
+        isValidSortOption(searchParams.sort)
+            ? searchParams.sort
             : "default";
 
     return (
